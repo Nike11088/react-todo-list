@@ -3,7 +3,7 @@ import styles from './TodoItem.module.css'
 import { updateTodo, deleteTodo } from '../../store/todoSlice'
 import { useDispatch } from 'react-redux'
 import { ITodo } from '../../types/types'
-import Dialog from '../Dialog/Dialog'
+import Modal from '../ui/Modal/Modal'
 
 interface TodoItemPorps {
   todo: ITodo
@@ -11,13 +11,10 @@ interface TodoItemPorps {
 
 const TodoItem: FC<TodoItemPorps> = ({ todo }) => {
   const dispatch = useDispatch()
-  const [dialogOpen, setDialogOpen] = useState<boolean>(false)
+  const [modalActive, setModalActive] = useState<boolean>(false)
 
   const deleteTask = () => {
-    setDialogOpen(true)
-  }
-  const closeDialog = () => {
-    setDialogOpen(false)
+    setModalActive(true)
   }
 
   return (
@@ -39,13 +36,13 @@ const TodoItem: FC<TodoItemPorps> = ({ todo }) => {
         />
         <button onClick={() => deleteTask()}>Delete</button>
       </div>
-      <Dialog
-        open={dialogOpen}
+      <Modal
+        active={modalActive}
+        setActive={setModalActive}
         ok={() => dispatch(deleteTodo(todo.id))}
-        cancel={() => closeDialog()}
       >
-        The todo will be deleted. Continue?
-      </Dialog>
+        <div>The todo will be deleted. Continue?</div>
+      </Modal>
     </>
   )
 }

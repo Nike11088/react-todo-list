@@ -2,15 +2,14 @@ import React, { FC, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { addTodo } from '../../store/todoSlice'
 import Dialog from '../Dialog/Dialog'
+import MyButton from '../ui/MyButton/MyButton'
+import Modal from '../ui/Modal/Modal'
+import styles from './AddTodo.module.css'
 
 const AddTodo: FC = () => {
   const dispatch = useDispatch()
-  const [dialogOpen, setDialogOpen] = useState<boolean>(false)
+  const [modalActive, setModalActive] = useState<boolean>(false)
   const [title, setTitle] = useState<string>('')
-
-  const input = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTitle(e.target.value)
-  }
 
   const save = () => {
     if (title === '') {
@@ -18,27 +17,21 @@ const AddTodo: FC = () => {
     }
     dispatch(addTodo(title))
     setTitle('')
-    setDialogOpen(false)
-  }
-
-  const closeDialog = () => {
-    setTitle('')
-    setDialogOpen(false)
   }
 
   return (
     <>
-      <button onClick={() => setDialogOpen(true)}>Add Task</button>
-      <Dialog open={dialogOpen} ok={() => save()} cancel={() => closeDialog()}>
+      <MyButton onClick={() => setModalActive(true)}>Add Task</MyButton>
+      <Modal active={modalActive} setActive={setModalActive} ok={save}>
         <input
+          className={styles.title}
           type="text"
           value={title}
-          onInput={(e: React.ChangeEvent<HTMLInputElement>) => input(e)}
+          onInput={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setTitle(e.target.value)
+          }
         />
-        {/* <button disabled={disabled} onClick={() => save()}>
-          Add Task
-        </button> */}
-      </Dialog>
+      </Modal>
     </>
   )
 }
